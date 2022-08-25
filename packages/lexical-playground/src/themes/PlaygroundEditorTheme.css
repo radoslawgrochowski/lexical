@@ -249,13 +249,6 @@
   transform: rotate(45deg);
   border-width: 0 2px 2px 0;
 }
-.PlaygroundEditorTheme__nestedListItem {
-  list-style-type: none;
-}
-.PlaygroundEditorTheme__nestedListItem:before,
-.PlaygroundEditorTheme__nestedListItem:after {
-  display: none;
-}
 .PlaygroundEditorTheme__tokenComment {
   color: slategray;
 }

@@ -6,12 +6,14 @@
  *
  */
 
+import {$generateNodesFromDOM} from '@lexical/html';
 import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
 import {AutoScrollPlugin} from '@lexical/react/LexicalAutoScrollPlugin';
 import {CharacterLimitPlugin} from '@lexical/react/LexicalCharacterLimitPlugin';
 import {CheckListPlugin} from '@lexical/react/LexicalCheckListPlugin';
 import {ClearEditorPlugin} from '@lexical/react/LexicalClearEditorPlugin';
 import {CollaborationPlugin} from '@lexical/react/LexicalCollaborationPlugin';
+import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import {HashtagPlugin} from '@lexical/react/LexicalHashtagPlugin';
 import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
 import {LinkPlugin} from '@lexical/react/LexicalLinkPlugin';
@@ -19,6 +21,7 @@ import {ListPlugin} from '@lexical/react/LexicalListPlugin';
 import {PlainTextPlugin} from '@lexical/react/LexicalPlainTextPlugin';
 import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import {TablePlugin} from '@lexical/react/LexicalTablePlugin';
+import {$getRoot} from 'lexical';
 import * as React from 'react';
 import {useRef, useState} from 'react';
 
@@ -155,6 +158,7 @@ export default function Editor(): JSX.Element {
             <FigmaPlugin />
             <ClickableLinkPlugin />
             <HorizontalRulePlugin />
+            <LoadHtmlPlugin />
             <EquationsPlugin />
             <ExcalidrawPlugin />
             <TabFocusPlugin />
@@ -193,4 +197,47 @@ export default function Editor(): JSX.Element {
       {showTreeView && <TreeViewPlugin />}
     </>
   );
+}
+
+function LoadHtmlPlugin() {
+  const [editor] = useLexicalComposerContext();
+
+  editor.update(() => {
+    let nodes = [];
+
+    const html = `
+    <ul data-sourcepos="1:1-5:5" style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
+      <li data-sourcepos="1:1-4:7" style="box-sizing: border-box;">foo<ul data-sourcepos="2:3-4:7" style="box-sizing: border-box; margin-top: 0px; margin-bottom: 0px;">
+          <li data-sourcepos="2:3-3:9" style="box-sizing: border-box;">bar<ul data-sourcepos="3:5-3:9" style="box-sizing: border-box; margin-top: 0px; margin-bottom: 0px;">
+              <li data-sourcepos="3:5-3:9" style="box-sizing: border-box;">baz</li>
+            </ul>
+          </li>
+          <li data-sourcepos="4:3-4:7" style="box-sizing: border-box;">foo</li>
+        </ul>
+      </li>
+      <li data-sourcepos="5:1-5:5" class="selected" style="box-sizing: border-box; background-color: rgb(238, 238, 238);">bar</li>
+    </ul>
+`;
+    //   const html = `
+    //   <ul class="PlaygroundEditorTheme__ul">
+    //   <li value="4" class="PlaygroundEditorTheme__listItem PlaygroundEditorTheme__ltr" dir="ltr"><span data-lexical-text="true">Join our </span><a href="https://discord.com/invite/KmG4wQnnD9" class="PlaygroundEditorTheme__link PlaygroundEditorTheme__ltr" dir="ltr"><span data-lexical-text="true">Discord Server</span></a><span data-lexical-text="true"> and chat with the team.</span></li>
+    //   <li value="5" class="PlaygroundEditorTheme__listItem PlaygroundEditorTheme__nestedListItem">
+    //     <ul class="PlaygroundEditorTheme__ul">
+    //       <li value="1" class="PlaygroundEditorTheme__listItem PlaygroundEditorTheme__ltr" dir="ltr"><span data-lexical-text="true">Hello</span></li>
+    //     </ul>
+    //   </li>
+    // </ul>`;
+
+    // Parse html
+    const parser = new DOMParser();
+    const dom = parser.parseFromString(html, 'text/html');
+    nodes = $generateNodesFromDOM(editor, dom);
+
+    // Set content
+    const root = $getRoot();
+    root.clear();
+    root.append(...nodes);
+  });
+
+  return null;
 }

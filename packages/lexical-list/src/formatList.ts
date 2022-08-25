@@ -367,8 +367,8 @@ export function $handleOutdent(listItemNodes: Array<ListItemNode>): void {
     const greatGrandparentList = grandparentListItem
       ? grandparentListItem.getParent()
       : undefined;
-    // If it doesn't have these ancestors, it's not indented.
 
+    // If it doesn't have these ancestors, it's not indented.
     if (
       $isListNode(greatGrandparentList) &&
       $isListItemNode(grandparentListItem) &&
