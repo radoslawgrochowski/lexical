@@ -128,7 +128,6 @@ test.describe('HorizontalRule', () => {
     await moveToLineBeginning(page);
 
     await page.keyboard.press('ArrowLeft');
-
     await page.keyboard.press('ArrowLeft');
 
     if (browserName === 'webkit') {
@@ -352,6 +351,7 @@ test.describe('HorizontalRule', () => {
       focusPath: [2],
     });
 
+    await page.keyboard.press('ArrowUp');
     await page.keyboard.press('ArrowUp');
     await page.keyboard.press('Backspace');
 

@@ -1085,6 +1085,12 @@ export function $getDecoratorNode(
         );
       }
       return possibleNode;
+    } else {
+      const topLevelElement = focusNode.getTopLevelElementOrThrow();
+      const possibleTopLevelNode = isBackward
+        ? topLevelElement.getPreviousSibling()
+        : topLevelElement.getNextSibling();
+      return possibleTopLevelNode;
     }
   }
   return null;

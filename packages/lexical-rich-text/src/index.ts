@@ -724,6 +724,14 @@ export function registerRichText(
             return true;
           }
         }
+        if (!$isRangeSelection(selection)) {
+          return false;
+        }
+        if ($shouldOverrideDefaultCharacterSelection(selection, true)) {
+          const isHoldingShift = event.shiftKey;
+          $moveCharacter(selection, isHoldingShift, true);
+          return true;
+        }
         return false;
       },
       COMMAND_PRIORITY_EDITOR,
@@ -743,6 +751,14 @@ export function registerRichText(
             nodes[0].selectNext(0, 0);
             return true;
           }
+        }
+        if (!$isRangeSelection(selection)) {
+          return false;
+        }
+        const isHoldingShift = event.shiftKey;
+        if ($shouldOverrideDefaultCharacterSelection(selection, false)) {
+          $moveCharacter(selection, isHoldingShift, false);
+          return true;
         }
         return false;
       },

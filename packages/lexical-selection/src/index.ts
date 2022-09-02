@@ -782,7 +782,10 @@ export function $shouldOverrideDefaultCharacterSelection(
 ): boolean {
   const possibleNode = $getDecoratorNode(selection.focus, isBackward);
 
-  return $isDecoratorNode(possibleNode) && !possibleNode.isIsolated();
+  return (
+    $isDecoratorNode(possibleNode) &&
+    (!possibleNode.isIsolated() || possibleNode.isTopLevel())
+  );
 }
 
 function getDOMTextNode(element: Node | null): Text | null {
