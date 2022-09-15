@@ -350,6 +350,7 @@ export function toggleLink(
     rel?: null | string;
   } = {},
 ): void {
+  debugger;
   const {target, rel} = attributes;
   const selection = $getSelection();
 
